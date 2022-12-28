@@ -13,7 +13,6 @@ const auth = async (req, res, next) => {
 
     const token = authHeader.split(' ')
     const decoded = await AccessTokenService.verify(token[1])
-
     const user = await getUserById(decoded.payload.userId)
 
     if (!user) {

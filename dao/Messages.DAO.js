@@ -1,12 +1,14 @@
 const { db } = require('../lib/db')
 
 async function getMessages(chatId, userId) {
-  return await db.UserChats.findOne({
+  const userChat = await db.UserChats.findOne({
     where: {
       chatId,
       userId,
     },
-  })
+    include: db.Messages,
+  });
+  return userChat.Messages;
 }
 
 function saveMessage(data) {

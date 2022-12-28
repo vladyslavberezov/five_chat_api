@@ -4,7 +4,7 @@ const { Op } = require('sequelize')
 
 
 function getChat(chatId) {
-  return db.Chats.findByPk(chatId, {
+  return db.Chats.findByPk(parseInt(chatId), {
     include: [{
       model: db.UserChats,
     }],
@@ -37,7 +37,7 @@ async function updateChat(data) {
 
 async function createChat(data, user) {
   if (data.users.length === 1) {
-    const exist = await db.Chats.findAll({
+    const chats = await db.Chats.findAll({
       where: {
         isGroup: false,
       },
@@ -56,7 +56,8 @@ async function createChat(data, user) {
       }],
     })
 
-    if (exist?.length) {
+    const exist = chats.find((chat) => chat.UserChats?.length === 2);
+    if (exist) {
       throw new ConflictError('Chat already exist')
     }
   }
@@ -90,12 +91,10 @@ async function deleteChat(id) {
       },
       transaction,
     })
-
     const deleteCount = await db.Chats.destroy({
       where: { id },
       transaction,
     })
-
     if (!deleteCount) {
       throw new InternalServerError('Unable to delete chat')
     }

@@ -15,8 +15,10 @@ class ChatIOController {
     this.socketUsers = socketUsers
     auth(this.socket)
       .then((user) => {
-        this.socket.user = user
-        this.socketUsers.set(parseInt(user.id), this.socket.id)
+        if (user) {
+          this.socket.user = user
+          this.socketUsers.set(parseInt(user.id), this.socket.id)
+        }
       })
   }
 
@@ -63,7 +65,9 @@ class ChatIOController {
 
     this.socket.on('disconnect', (payload) => {
       console.log('socket:chat_leave', payload)
-      this.socketUsers.delete(this.socket.user.id)
+      if (this.socket.user) {
+        this.socketUsers.delete(this.socket.user.id)
+      }
     })
   }
 

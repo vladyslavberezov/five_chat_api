@@ -35,7 +35,6 @@ const updateChat = handleError(async (req, res) => {
   res.send({ data })
 })
 
-
 const deleteChat = handleError(async (req, res, next) => {
   try {
     const { id } = req.params
@@ -51,6 +50,7 @@ const deleteChat = handleError(async (req, res, next) => {
       const chatDeletedId = await ChatDAO.deleteChat(id)
       res.send({ data: { id: chatDeletedId } })
     } else {
+      // TODO: implement in get method
       await MessagesDAO.deleteUserMessages(userChat.id)
       await ChatDAO.updateUserChat(userChat.id, { isDeleted: true })
       res.send({ data: { id } })

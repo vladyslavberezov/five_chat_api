@@ -3,7 +3,7 @@ const { handleError } = require('../lib/utils/')
 
 const getMessages = handleError(async (req, res) => {
   const { id } = req.params
-  const { user } = req.state
+  const user = req.user
   const data = await MessagesDAO.getMessages(id, user.id)
   res.send({ data })
 })
