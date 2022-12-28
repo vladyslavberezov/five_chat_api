@@ -23,7 +23,6 @@ class ChatIOController {
   }
 
   listen() {
-
     this.socket.on('chat_message', async (payload) => {
       const { chatId, message, userId } = payload
 
@@ -39,7 +38,10 @@ class ChatIOController {
         })
         const userSockets = this.socketUsers.get(parseInt(userChat.userId))
         userSockets.forEach((socketId) => {
-          this.io.sockets.sockets.get(socketId).emit('chat_message', { data })
+          const userSocket = this.io.sockets.sockets.get(socketId);
+          if (userSocket) {
+            userSocket.emit('chat_message', { data })
+          }
         })
       })
     })
